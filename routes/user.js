@@ -70,7 +70,7 @@ UserRoute.get('/feed', userAuth, async (req, res) => {
     // paination logic use skip and limit.
         const loggedInUser = req.user;
         const page = (req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        let limit = parseInt(req.query.limit) || 10;
         limit =  limit>50 ? 50 :limit; 
         const skip = (page - 1) * limit;
 

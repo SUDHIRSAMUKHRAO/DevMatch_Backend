@@ -11,13 +11,13 @@ const userAuth = async(req,res,next) => {
 // validate the token
 // if the token is valid then see user is exist in the database.
 try{
-const cookie = req.cookies;
 
-if(!cookie.token){
-    throw new Error('No token, authorization denied')
-}
+    const {token } = req.cookies;
+    if(!token){
+           return res.status(401).send("Please Login!");
+    }
 
-const decodedtoken = await jwt.verify(cookie.token, 'sam@771590')
+const decodedtoken = await jwt.verify(token, 'sam@771590')
 
 const {id}= decodedtoken;
 

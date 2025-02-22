@@ -45,7 +45,7 @@ Authroutes.post('/login', async (req, res) => {
             let token = await user.getjwtToken()
 
             res.cookie("token", token)   // will set token for all.
-            res.send("login Successfull")
+            res.send(user)
         } else {
             res.send("Invalid crediential")
         }

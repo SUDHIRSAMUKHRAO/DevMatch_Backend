@@ -11,6 +11,13 @@ const Authroutes =  require('./routes/registreationLoginRoutes')
 const profileRoutes = require('./routes/profileRouters')
 const requestsRoute = require("./routes/request")
 const UserRoutes = require("./routes/user")
+const cors = require("cors")
+
+app.use(cors({
+  origin: "http://localhost:5173",   // whitelisted
+  credentials: true, // allow session cookies
+  //secure: false, // set to true if using HTTPS
+}))
 
 app.use(express.json()) //read the json object convert into js // this is middleware we have use so this can use for all routes but when we use
                         //app.use(/test ()=>{}) // this use as routes.
