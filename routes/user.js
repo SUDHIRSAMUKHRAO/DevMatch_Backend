@@ -5,7 +5,7 @@ const { userAuth } = require('../middleware/auth');
 const connectionRequest = require('../models/connections');
 const User =  require('../models/schema');
 
-const UserSafeData = 'firstname lastname gender age photoUrl skills'
+const UserSafeData = 'firstname lastName gender age photoUrl skills'
 
 //get all requests of logged in user
 UserRoute.get('/user/request/recieved', userAuth, async (req, res) => {

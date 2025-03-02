@@ -10,7 +10,7 @@ if(!validator.isEmail(email)){
 }
 
 const validatedEditProfileData = (req)=>{
-const allowedField = ['firstname', 'lastName', 'photoUrl', 'skills', 'gender', 'age'];
+const allowedField = ['firstname', 'lastName', 'photoUrl', 'skills', 'gender', 'age','about'];
 
 const isvalid= Object.keys(req.body).every(field =>allowedField.includes(field))
 

@@ -53,6 +53,9 @@ const userScehma = new mongoose.Schema({
    },
    skills: {
       type: [String],
+   },
+   about:{
+      type :String
    }
    
 }, 

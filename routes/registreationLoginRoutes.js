@@ -45,12 +45,12 @@ Authroutes.post('/login', async (req, res) => {
             let token = await user.getjwtToken()
 
             res.cookie("token", token)   // will set token for all.
-            res.send(user)
+            res.send(user).pop
         } else {
-            res.send("Invalid crediential")
+            res.status(401).send("Invalid crediential")
         }
     } catch (e) {
-        res.send("login unsucessfull" + e)
+        res.status(401).send("error: " + e.message)
     }
 })
 
@@ -58,7 +58,7 @@ Authroutes.post('/login', async (req, res) => {
 Authroutes.post('/logout',async(req, res) => {
  res.cookie("token",null,{
     expires: new Date(0) // expires immediately
-  });
+  }); 
   res.send('logout successfuly  :)  ')
  }) //
 
