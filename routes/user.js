@@ -35,31 +35,35 @@ UserRoute.get('/user/request/recieved', userAuth, async (req, res) => {
 });
 
 //connections of user
-UserRoute.get('/user/connection',userAuth, async (req, res)=>{
-try{
+UserRoute.get('/user/connection', userAuth, async (req, res) => {
+    try {
+        const loggedInUser = req.user;
 
-    const loggedInUser =  req.user;
-    const connections  =  await connectionRequest.find({
-        $or:[
-            {fromUserId: loggedInUser._id,status: 'accepted'},
-            {toUserId: loggedInUser._id,status: 'accepted'}
-        ]
-    }).populate(
-        'fromUserId toUserId',
-        UserSafeData );
-    const dataconnections = connections.map((row)=>row.fromUserId); // it was sending whole object now only will send fromUserId obejects
-  res.json({
-        message: 'Data Fetched successfully',
-        data: dataconnections
-    });
-}catch(err){
-   
-    res.status(500).send('Server Error',err);
-}
+        // Find all accepted connections where loggedInUser is either sender or receiver
+        const connections = await connectionRequest.find({
+            $or: [
+                { fromUserId: loggedInUser._id, status: 'accepted' },
+                { toUserId: loggedInUser._id, status: 'accepted' }
+            ]
+        }).populate('fromUserId toUserId', UserSafeData);
 
+        // Ensure both users see full details of their connections
+        const dataconnections = connections.map(row =>
+            row.fromUserId._id.toString() === loggedInUser._id.toString()
+                ? row.toUserId  // If logged-in user is sender, show receiver details
+                : row.fromUserId // If logged-in user is receiver, show sender details
+        );
 
+        res.json({
+            message: 'Data Fetched successfully',
+            data: dataconnections
+        });
+    } catch (err) {
+        console.error(err); // Log error for debugging
+        res.status(500).json({ message: 'Server Error', error: err.message });
+    }
+});
 
-})
 
 // Feed of user
 UserRoute.get('/feed', userAuth, async (req, res) => {
