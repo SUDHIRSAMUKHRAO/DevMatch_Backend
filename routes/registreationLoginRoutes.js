@@ -21,8 +21,13 @@ Authroutes.post('/signin', async (req, res) => {
             emailId: email
         }
         )
-        let data = await user.save()
-        res.send("data added sucessfully")
+        let savedUser = await user.save()
+        let token = await savedUser.getjwtToken()
+        res.cookie("token", token,{
+            expires: new Date(Date.now() + 60 * 60 * 1000) } // expires in 1 hour  // will set token for all.
+        )   // will set token for all.
+
+        res.json({message:"User Sinup Successfully", data : savedUser})
     } catch (err) {
         res.send("error while register data" + err)
     }

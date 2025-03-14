@@ -11,7 +11,7 @@ requestsRoute.post('/request/send/:status/:toUserId', userAuth, async (req, res)
         const fromUserId = req.user.id;
         const toUserId = req.params.toUserId;
 
-        const allowedStatus = ["intrested", "ignored"];
+        const allowedStatus = ["intrested", "ignored"]
         if (!allowedStatus.includes(status)) {
             throw new Error("Invalid Request Status");
         }
