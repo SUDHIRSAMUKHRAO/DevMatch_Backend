@@ -53,9 +53,9 @@ requestsRoute.post('/request/send/:status/:toUserId', userAuth, async (req, res)
 
 requestsRoute.post('/request/review/:status/:userid',userAuth,async(req, res)=>{
    try{ 
-   const status = req.params.status;
+  const status = req.params.status;
   const reqestId =  req.params.userid;
-   const loggedInUser = req.user;
+  const loggedInUser = req.user;
     
      const allowedStatus = ["accepted", "Rejected"];
      if(!allowedStatus.includes(status)){

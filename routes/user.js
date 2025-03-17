@@ -5,7 +5,7 @@ const { userAuth } = require('../middleware/auth');
 const connectionRequest = require('../models/connections');
 const User =  require('../models/schema');
 
-const UserSafeData = 'firstname lastName gender age photoUrl skills'
+const UserSafeData = 'firstname lastName gender age photoUrl skills about'
 
 //get all requests of logged in user
 UserRoute.get('/user/request/recieved', userAuth, async (req, res) => {
@@ -39,30 +39,48 @@ UserRoute.get('/user/connection', userAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
 
-        // Find all accepted connections where loggedInUser is either sender or receiver
+        // Find all accepted connections where logged-in user is involved
         const connections = await connectionRequest.find({
             $or: [
                 { fromUserId: loggedInUser._id, status: 'accepted' },
                 { toUserId: loggedInUser._id, status: 'accepted' }
             ]
-        }).populate('fromUserId toUserId', UserSafeData);
+        })
+        .populate({
+            path: 'fromUserId',
+            UserSafeData
+        })
+        .populate({
+            path: 'toUserId',
+            UserSafeData
+        });
+
+        console.log("Fetched Connections:", connections);
 
         // Ensure both users see full details of their connections
-        const dataconnections = connections.map(row =>
-            row.fromUserId._id.toString() === loggedInUser._id.toString()
-                ? row.toUserId  // If logged-in user is sender, show receiver details
-                : row.fromUserId // If logged-in user is receiver, show sender details
-        );
+        const dataconnections = connections.map(row => {
+            if (row.fromUserId && row.fromUserId._id.toString() === loggedInUser._id.toString()) {
+                return row.toUserId;  // Return full user details, not just ID
+            } else {
+                return row.fromUserId;
+            }
+        });
+
+        console.log("Final Connections Data:", dataconnections);
 
         res.json({
             message: 'Data Fetched successfully',
             data: dataconnections
         });
     } catch (err) {
-        console.error(err); // Log error for debugging
+        console.error("Error fetching connections:", err);
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 });
+
+
+
+
 
 
 // Feed of user
